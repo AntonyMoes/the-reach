@@ -1,5 +1,8 @@
 package com.antonymo.thereach;
 
+import com.antonymo.thereach.dimension.ModDimensions;
+import com.antonymo.thereach.event.ModEvents;
+import com.antonymo.thereach.util.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,14 +22,16 @@ import org.apache.logging.log4j.Logger;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(TheReach.MODID)
+@Mod(TheReach.MOD_ID)
 public class TheReach
 {
-    public static final String MODID = "thereach";
+    public static final String MOD_ID = "thereach";
     // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public TheReach() {
+        registerModAdditions();
+
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -38,6 +43,7 @@ public class TheReach
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new ModEvents());
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -81,5 +87,11 @@ public class TheReach
             // register a new block here
             LOGGER.info("HELLO from Register Block");
         }
+    }
+
+    void registerModAdditions() {
+        Registration.init();
+
+        ModDimensions.register();
     }
 }
